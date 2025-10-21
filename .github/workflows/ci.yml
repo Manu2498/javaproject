@@ -38,7 +38,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.USERNAME }}   # Docker Hub username
+          username: ${{ secrets.USERNAME }}   # Docker Hub username-
           password: ${{ secrets.PASSWORD }}      # Docker Hub PAT with Read & Write
 
       # 7️⃣ Build and push Docker image
