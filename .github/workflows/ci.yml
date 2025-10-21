@@ -36,7 +36,7 @@ jobs:
     - name: Build and Push Docker Image
       uses: mr-smithers-excellent/docker-build-push@v4
       with:
-        image: manu2041/manu2041docs
+        image: manu2041/manu2498
         registry: docker.io
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
