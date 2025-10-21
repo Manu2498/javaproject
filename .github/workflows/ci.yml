@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Gradle   #
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Java CI with Gradle and Docker
 
 on:
   push:
@@ -10,36 +10,46 @@ on:
     branches: [ master ]
 
 jobs:
-  build-java:
+  build-and-push:
 
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+      # 1️⃣ Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
+      # 2️⃣ Set up JDK 1.8
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 1.8
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      # 3️⃣ Grant execute permission for Gradle wrapper
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
-    - name: Build with Gradle
-      run: ./gradlew build
+      # 4️⃣ Build the Java project with Gradle
+      - name: Build with Gradle
+        run: ./gradlew build
 
-    - name: List build output
-      run: ls -l build/libs
+      # 5️⃣ List the build output
+      - name: List build output
+        run: ls -l build/libs
 
-    - name: Build and Push Docker Image
-      uses: mr-smithers-excellent/docker-build-push@v4
-      with:
-        image: manu2041/manu2041docs
-        registry: docker.io
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-  
+      # 6️⃣ Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.USERNAME }}   # Docker Hub username
+          password: ${{ secrets.PASSWORD }}      # Docker Hub PAT with Read & Write
 
-   
+      # 7️⃣ Build and push Docker image
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: docker.io/manu2041/manu2041docs:latest
