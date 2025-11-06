@@ -1,5 +1,4 @@
 name: Java CI with Gradle and Docker
-1
 on:
   push:
     branches: [ master ]
